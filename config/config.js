@@ -9,8 +9,11 @@
 
 module.exports = {
 	development: {
-		dialect: 'sqlite',
-		storage: './db.development.sqlite'
+		username: 'root',
+		password: 'Lahiru@97',
+		database: 'testdb',
+		host: 'localhost',
+		dialect: 'mysql',
 	},
 	test: {
 		dialect: 'sqlite',
