@@ -21,11 +21,15 @@ const crypto = require('crypto');
 
 const validatePassword = (password, hashedPassword) => {
     
-    return password === hashedPassword;
+    //return password === hashedPassword;
 
     // Hashed passwords !? here is the code ;) 
-    //const hash = crypto.pbkdf2Sync(password, process.env.SALT, 10000, 512, 'sha512').toString('hex');
-    //return hash === hashedPassword;
+    const hash = crypto.pbkdf2Sync(password, process.env.SALT, 10000, 256, 'sha256').toString('hex');
+    return hash === hashedPassword;
 }
+
+// const hashPassword = (body) => {
+//     body.password = crypto.pbkdf2Sync(body.password, process.env.SALT, 10000, 256, 'sha256').toString('hex');
+// }
 
 module.exports = validatePassword;

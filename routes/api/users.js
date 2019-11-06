@@ -25,6 +25,7 @@ const userSchema = Joi.object().keys({
 /* POST login route */
 router.post('/login', auth.optional, (req, res, next) => {
 	const { body: { user } } = req;
+	console.log(req.body);
 	const result = Joi.validate(user, userSchema);
     
 	if(result.error){
