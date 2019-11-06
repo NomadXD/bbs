@@ -13,6 +13,7 @@ const router      = require('express').Router();
 const auth        = require('../auth');
 const generateJWT = require('../../utils/generateJWT');
 const User        = require('../../models').User;
+const crypto = require('crypto');
 
 const userSchema = Joi.object().keys({
 	username: Joi.string().alphanum().min(3).max(30).optional(),
