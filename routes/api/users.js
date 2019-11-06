@@ -57,14 +57,17 @@ router.post('/login', auth.optional, (req, res, next) => {
 });
 
 router.post('/signup', auth.optional, async (req, res /*, next*/) => {
+
 	const { body: { user } } = req;
 	const result = Joi.validate(user, userSchema);
 	if(result.error){
 		return res.status(422).json({
 			errors: result.error
 		});
-    }
+		}
+		
     try{
+			req.body.password = crypto.pbkdf2Sync(req.body.password, process.env.SALT, 10000, 256, 'sha256').toString('hex');
         const user = await User.create(req.body);
         return res.json({ user });
     }catch(e){
