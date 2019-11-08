@@ -67,6 +67,16 @@ module.exports = (sequelize, DataTypes) => {
 	User.getUserById = function(id){
 		return this.findOne({where:{id}})
 	}
+
+	User.associate = function (models) {
+		models.User.belongsTo(models.User,{foreignKey:'bloodGroupID',constraints:true});
+		//models.User.hasMany(models.DonationHistory,{foreignKey:'user_id',constraints:true})
+	};
+
+	
+	  
+
+
     
 	return User;
 };

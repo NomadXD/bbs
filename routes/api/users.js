@@ -12,6 +12,7 @@ const router      = require('express').Router();
 const User        = require('../../models').User;
 const bcrypt = require('bcrypt');
 const authenticate = require('../../utils/authentication')
+const connection = require('../../temp/db')
 
 
 const userSchema = Joi.object().keys({
@@ -22,7 +23,8 @@ const userSchema = Joi.object().keys({
 	last_name: Joi.string().alphanum().min(2).max(100).required(),
 	birthday: Joi.date().iso().required(),
 	gender: Joi.string().max(1).required(),
-	account_status: Joi.optional()
+	account_status: Joi.optional(),
+	bloodGroupID:Joi.required()
 });
 
 /* POST login route */
@@ -83,22 +85,81 @@ router.get('/list', authenticate.authenticateToken, (req, res, next) => {
 });
 
 router.post('/testdb',(req,res)=>{
-	let passedValue = req.body.email
-	//let user = User.findOne({where:{email:req.body.email}});
-	//console.log(user)
 
-	// let user = User.getUserByEmail(req.body.email)
-	// console.log(user)
-	// res.json({user})
+	if(connection.connect){
+		res.json({"status":"Success"})
+	}else{
+		res.json({"status":"Error"})
+	}
+	
 
-	User.findOne({email: req.body.email}, {explicit: true}).then(function(user) {
-		// do something with user
-		res.send(user)
-	}).catch(function(err) {
-		res.send({error: err})
-	})
+	// User.findOne({email: req.body.email}, {explicit: true}).then(function(user) {
+	// 	// do something with user
+	// 	res.send(user)
+	// }).catch(function(err) {
+	// 	res.send({error: err})
+	// })
 
 })
+
+
+router.get('/search',authenticate.authenticateToken,(req,res,next)=>{
+	//Query the db according to a specified feild and return a list of donor
+})
+
+
+router.delete('/delete',authenticate.authenticateToken,(req,res,next)=>{
+	User.destroy({
+		where:{
+			id:req.user.id
+		}
+	}).then(function(value){
+		res.json({"response":value})
+	}).catch(function(err){
+		res.json({"error":err})
+	})
+})
+
+router.put('/update',authenticate.authenticateToken,(req,res,next)=>{
+	console.log(req.body)
+	User.update(
+		{first_name:req.body.first_name},{where:req.user.id}
+	).then(function(updated){
+		res.json({updated})
+	}).catch(function(err){
+		res.json({err})
+	})
+		
+	
+})
+
+
+router.post('/donate',authenticate.authenticateToken,(req,res,next)=>{
+
+})
+
+
+
+// return sequelize.transaction(t => {
+//   // chain all your queries here. make sure you return them.
+//   return User.create({
+//     firstName: 'Abraham',
+//     lastName: 'Lincoln'
+//   }, {transaction: t}).then(user => {
+//     return user.setShooter({
+//       firstName: 'John',
+//       lastName: 'Boothe'
+//     }, {transaction: t});
+//   });
+
+// }).then(result => {
+//   // Transaction has been committed
+//   // result is whatever the result of the promise chain returned to the transaction callback
+// }).catch(err => {
+//   // Transaction has been rolled back
+//   // err is whatever rejected the promise chain returned to the transaction callback
+// });
+
 
 
 

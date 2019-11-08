@@ -1,4 +1,5 @@
-const User            = require('../models').User;
+const User = require('../models').User;
+const Donor = require('../models').Donor;
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -18,9 +19,6 @@ const authenticateUser = async (email, password,res) => {
 
     console.log(user.password) 
     const accesToken = jwt.sign(user.toJSON(),process.env.JWT_SECRET);
-       
-        
-
         return res.json({
             token:accesToken
         })
@@ -50,5 +48,36 @@ const authenticateToken = async (req,res,next) => {
 
 }
 
+const authenticateDonor = async (email, password,res) => {
+	const donor = await Donor.findOne({where:{email}})
+	console.log(email,password)
+    if (donor == null) {
+      return res.json({
+          "success":false,
+          "errors":'Username enetered is not valid'
+      })
+    }
+	console.log("passed")
+	console.log(donor.password)
+    try {
+      if (await bcrypt.compare(password, donor.password)) {
 
-  module.exports = {authenticateUser,authenticateToken};
+    console.log(donor.password) 
+    const accesToken = jwt.sign(donor.toJSON(),process.env.JWT_SECRET);
+        return res.json({
+            token:accesToken
+        })
+      } else {
+        return res.json({ message: 'Password incorrect' })
+      }
+    } catch (e) {
+      console.log(e)
+      return res.json({
+        "success":false,
+        "error":e
+      })
+    }
+  }
+
+
+  module.exports = {authenticateUser,authenticateToken,authenticateDonor};
