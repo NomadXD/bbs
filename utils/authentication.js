@@ -1,24 +1,41 @@
-const User = require('../sequalize').User;
 const Donor = require('../sequalize').Donor;
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const User = require('../models/User')
+const connection = require('../models/db')
 
-const authenticateUser = async (email, password,res) => {
-	const user = await User.findOne({where:{email}})
-	console.log(email,password)
-    if (user == null) {
+const authenticateUser = async (email, password,res,callback) => {
+  let queryString = 'SELECT * from User where email=?'
+  connection.query(queryString, email, (err, rows, feilds) => {
+      if(err){
+        res.json({
+          code:"400",
+          failed:err
+        })
+      }
+      let user = JSON.parse(JSON.stringify(rows))
+
+      callback(user[0],password,res)    
+  })
+
+	
+  }
+
+const authenticateAccount = async (account,password,res) => {
+  console.log(account)
+    if (account == null) {
       return res.json({
           "success":false,
           "errors":'Username enetered is not valid'
       })
     }
-	console.log("passed")
-	console.log(user.password)
+	console.log("password"+password)
+	console.log("account pass"+account.password)
     try {
-      if (await bcrypt.compare(password, user.password)) {
+      if (await bcrypt.compare(password, account.password)) {
 
-    console.log(user.password) 
-    const accesToken = jwt.sign(user.toJSON(),process.env.JWT_SECRET);
+    console.log("Inside compare") 
+    const accesToken = jwt.sign(account,process.env.JWT_SECRET);
         return res.json({
             token:accesToken
         })
@@ -32,7 +49,9 @@ const authenticateUser = async (email, password,res) => {
         "error":e
       })
     }
-  }
+
+}
+
 
 const authenticateToken = async (req,res,next) => {
   const authHeader = req.headers['authorization'];
@@ -80,4 +99,4 @@ const authenticateDonor = async (email, password,res) => {
   }
 
 
-  module.exports = {authenticateUser,authenticateToken,authenticateDonor};
+  module.exports = {authenticateUser,authenticateToken,authenticateDonor,authenticateAccount};

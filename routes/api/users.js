@@ -39,7 +39,7 @@ router.post('/login', (req, res, next) => {
 		});
 	}
 	console.log('login');
-	authenticate.authenticateUser(req.body.email,req.body.password,res);
+	authenticate.authenticateUser(req.body.email,req.body.password,res,authenticate.authenticateAccount);
 
 });
 
@@ -56,7 +56,6 @@ router.post('/signup', async (req, res /*, next*/) => {
 	}
 
 	req.body.password = await bcrypt.hash(req.body.password, 10)
-	console.log(details);
   User.createUser(req,res);
 });
 
