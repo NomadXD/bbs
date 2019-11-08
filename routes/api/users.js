@@ -9,11 +9,11 @@
 
 const Joi         = require('joi');
 const router      = require('express').Router();
-const User        = require('../../models').User;
+//const User        = require('../../sequalize').User;
 const bcrypt = require('bcrypt');
 const authenticate = require('../../utils/authentication')
-const connection = require('../../temp/db')
-
+//const connection = require('../../models/db')
+const User = require('../../models/User')
 
 const userSchema = Joi.object().keys({
 	id: Joi.string().alphanum().min(3).max(30).optional(),
@@ -24,7 +24,7 @@ const userSchema = Joi.object().keys({
 	birthday: Joi.date().iso().required(),
 	gender: Joi.string().max(1).required(),
 	account_status: Joi.optional(),
-	bloodGroupID:Joi.required()
+	blood_group:Joi.required()
 });
 
 /* POST login route */
@@ -53,19 +53,14 @@ router.post('/signup', async (req, res /*, next*/) => {
 		return res.status(422).json({
 			errors: result.error
 		});
-		}
-		
-    try{
-			req.body.password = await bcrypt.hash(req.body.password, 10)
-			console.log(details);
-        const user = await User.create(req.body);
-        return res.json({ user });
-    }catch(e){
-        return res.status(500).json({
-			errors: e
-		});
-    }
+	}
+
+	req.body.password = await bcrypt.hash(req.body.password, 10)
+	console.log(details);
+  User.createUser(req,res);
 });
+
+
 
 /* GET list route */
 router.get('/list', authenticate.authenticateToken, (req, res, next) => {
@@ -84,21 +79,9 @@ router.get('/list', authenticate.authenticateToken, (req, res, next) => {
 
 });
 
-router.post('/testdb',(req,res)=>{
+router.post('/testdb',async (req,res)=>{
 
-	if(connection.connect){
-		res.json({"status":"Success"})
-	}else{
-		res.json({"status":"Error"})
-	}
-	
-
-	// User.findOne({email: req.body.email}, {explicit: true}).then(function(user) {
-	// 	// do something with user
-	// 	res.send(user)
-	// }).catch(function(err) {
-	// 	res.send({error: err})
-	// })
+	user =await User.createUser(req,res)
 
 })
 
@@ -137,30 +120,6 @@ router.put('/update',authenticate.authenticateToken,(req,res,next)=>{
 router.post('/donate',authenticate.authenticateToken,(req,res,next)=>{
 
 })
-
-
-
-// return sequelize.transaction(t => {
-//   // chain all your queries here. make sure you return them.
-//   return User.create({
-//     firstName: 'Abraham',
-//     lastName: 'Lincoln'
-//   }, {transaction: t}).then(user => {
-//     return user.setShooter({
-//       firstName: 'John',
-//       lastName: 'Boothe'
-//     }, {transaction: t});
-//   });
-
-// }).then(result => {
-//   // Transaction has been committed
-//   // result is whatever the result of the promise chain returned to the transaction callback
-// }).catch(err => {
-//   // Transaction has been rolled back
-//   // err is whatever rejected the promise chain returned to the transaction callback
-// });
-
-
 
 
 module.exports = router;

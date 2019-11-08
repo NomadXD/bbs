@@ -1,5 +1,5 @@
-const User = require('../models').User;
-const Donor = require('../models').Donor;
+const User = require('../sequalize').User;
+const Donor = require('../sequalize').Donor;
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
