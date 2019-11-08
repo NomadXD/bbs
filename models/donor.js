@@ -1,21 +1,12 @@
-/**
- *
- * Author:  AppSeed.us
- *
- * License: MIT - Copyright (c) AppSeed.us
- * @link https://github.com/app-generator/nodejs-starter
- *
- */
 'use strict';
 
 const uuid = require('uuid/v4');
 module.exports = (sequelize, DataTypes) => {
-	let User = sequelize.define('User', {
+	let Donor = sequelize.define('Donor', {
 		id: {
 			allowNull: false,
 			primaryKey: true,
 			type: DataTypes.UUID,
-			defaultValue: () => uuid()
 		},
 		first_name: {
 			type:DataTypes.STRING,
@@ -58,15 +49,11 @@ module.exports = (sequelize, DataTypes) => {
 				fields: ['email']
 			}
 		]
-	});
+    });
 
-	User.getUserByEmail = function(email){
-		return this.findOne({where:{email}})
-	}
+    Donor.associate = function (models) {
+        models.Donor.hasMany(models.DonationHistory);
+      };
 
-	User.getUserById = function(id){
-		return this.findOne({where:{id}})
-	}
-    
-	return User;
-};
+    return Donor;
+}    

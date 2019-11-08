@@ -15,11 +15,14 @@ const authenticate = require('../../utils/authentication')
 
 
 const userSchema = Joi.object().keys({
-	username: Joi.string().alphanum().min(3).max(30).optional(),
+	id: Joi.string().alphanum().min(3).max(30).optional(),
 	password: Joi.string().required(),
 	email: Joi.string().email({ minDomainAtoms: 2 }).required(),
-	name: Joi.string().alphanum().min(2).max(100).optional(),
-	surname: Joi.string().alphanum().min(2).max(100).optional()
+	first_name: Joi.string().alphanum().min(2).max(100).required(),
+	last_name: Joi.string().alphanum().min(2).max(100).required(),
+	birthday: Joi.date().iso().required(),
+	gender: Joi.string().max(1).required(),
+	account_status: Joi.optional()
 });
 
 /* POST login route */
@@ -78,6 +81,24 @@ router.get('/list', authenticate.authenticateToken, (req, res, next) => {
 	// })
 
 });
+
+router.post('/testdb',(req,res)=>{
+	let passedValue = req.body.email
+	//let user = User.findOne({where:{email:req.body.email}});
+	//console.log(user)
+
+	// let user = User.getUserByEmail(req.body.email)
+	// console.log(user)
+	// res.json({user})
+
+	User.findOne({email: req.body.email}, {explicit: true}).then(function(user) {
+		// do something with user
+		res.send(user)
+	}).catch(function(err) {
+		res.send({error: err})
+	})
+
+})
 
 
 
