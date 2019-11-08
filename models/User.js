@@ -51,8 +51,37 @@ const findUserByEmail = (email) => {
 
 }
 
+const updateUserInfo = (req,res) => {
+
+    let user = req.user
+    let newInfo = req.body
+    if (connection.connect) {
+        let queryString = 'UPDATE User SET first_name = ?,last_name = ?,email = ?,birthday = ?, gender = ?, blood_group = ? WHERE email = ?'
+        let params = [newInfo.first_name, newInfo.last_name, newInfo.email, newInfo.birthday,newInfo.gender,newInfo.blood_group,user.email]
+        connection.query(queryString, params, (err, rows, feilds) => {
+            if (err) {
+                res.json({
+                    "code": 400,
+                    "failed": err
+                })
+            } else {
+                res.json({
+                    "code": 200,
+                    "success": "Details changed"
+                })
+            }
+        })
+    } else {
+        res.json({
+            "code": 400,
+            "failed": "Database connection error"
+        })
+    }
+    
+}
 
 
 
 
-module.exports = { createUser, findUserByEmail };
+
+module.exports = { createUser, findUserByEmail,updateUserInfo};

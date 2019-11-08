@@ -91,26 +91,12 @@ router.get('/search',authenticate.authenticateToken,(req,res,next)=>{
 
 
 router.delete('/delete',authenticate.authenticateToken,(req,res,next)=>{
-	User.destroy({
-		where:{
-			id:req.user.id
-		}
-	}).then(function(value){
-		res.json({"response":value})
-	}).catch(function(err){
-		res.json({"error":err})
-	})
+	
+	
 })
 
 router.put('/update',authenticate.authenticateToken,(req,res,next)=>{
-	console.log(req.body)
-	User.update(
-		{first_name:req.body.first_name},{where:req.user.id}
-	).then(function(updated){
-		res.json({updated})
-	}).catch(function(err){
-		res.json({err})
-	})
+	User.updateUserInfo(req,res)
 		
 	
 })
