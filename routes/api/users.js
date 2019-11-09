@@ -9,10 +9,8 @@
 
 const Joi         = require('joi');
 const router      = require('express').Router();
-//const User        = require('../../sequalize').User;
 const bcrypt = require('bcrypt');
 const authenticate = require('../../utils/authentication')
-//const connection = require('../../models/db')
 const User = require('../../models/User')
 
 const userSchema = Joi.object().keys({
@@ -91,8 +89,7 @@ router.get('/search',authenticate.authenticateToken,(req,res,next)=>{
 
 
 router.delete('/delete',authenticate.authenticateToken,(req,res,next)=>{
-	
-	
+	User.deleteUser(req,res)	
 })
 
 router.put('/update',authenticate.authenticateToken,(req,res,next)=>{

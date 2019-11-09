@@ -52,7 +52,6 @@ const findUserByEmail = (email) => {
 }
 
 const updateUserInfo = (req,res) => {
-
     let user = req.user
     let newInfo = req.body
     if (connection.connect) {
@@ -80,8 +79,35 @@ const updateUserInfo = (req,res) => {
     
 }
 
+const deleteUser = (req,res) => {
+    let user = req.user
+    if (connection.connect) {
+        let queryString = 'DELETE FROM User WHERE email = ?'
+        let params = [user.email]
+        connection.query(queryString, params, (err, rows, feilds) => {
+            if (err) {
+                res.json({
+                    "code": 400,
+                    "failed": err
+                })
+            } else {
+                res.json({
+                    "code": 200,
+                    "success": "User Deleted"
+                })
+            }
+        })
+    } else {
+        res.json({
+            "code": 400,
+            "failed": "Database connection error"
+        })
+    }
+
+} 
 
 
 
 
-module.exports = { createUser, findUserByEmail,updateUserInfo};
+
+module.exports = { createUser, findUserByEmail,updateUserInfo,deleteUser};
