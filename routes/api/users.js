@@ -100,6 +100,7 @@ router.put('/update',authenticate.authenticateToken,(req,res,next)=>{
 
 
 router.post('/donate',authenticate.authenticateToken,(req,res,next)=>{
+	User.requestToDonate(req,res,User.updateUserStatus)
 
 })
 

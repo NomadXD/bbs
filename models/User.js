@@ -6,7 +6,7 @@ const createUser = (req, res) => {
     if (connection.connect) {
         let data = req.body
         let queryString = 'INSERT INTO User VALUES (?,?,?,?,?,?,?,?,?,?,?)'
-        let params = [UUID(), data.first_name, data.last_name, data.email, data.birthday, data.password, data.gender, data.account_status, data.blood_group, null, null]
+        let params = [UUID(), data.first_name, data.last_name, data.email, data.birthday, data.password, data.gender, process.env.NEW_USER, data.blood_group, null, null]
         connection.query(queryString, params, (err, rows, feilds) => {
             // if (err) return { type: "Database Error", code: err.errno, error: err.message }
             if (err) {
@@ -104,10 +104,65 @@ const deleteUser = (req,res) => {
         })
     }
 
-} 
+}
+
+const requestToDonate = (req,res,callback) => {
+    let user = req.user
+    if (connection.connect && user.account_status==1) {
+        let queryString = 'INSERT INTO DonationRequest VALUES (?,?)'
+        let params = [UUID(),user.id]
+        connection.query(queryString, params, (err, rows, feilds) => {
+            if (err) {
+                res.json({
+                    "code": 400,
+                    "failed": err
+                })
+            } else {
+                // res.json({
+                //     "code": 200,
+                //     "success": "Request sent to Admin. Await for approval"
+                // })
+                callback(process.env.REQUESTED_USER,res)
+            }
+        })
+    } else {
+        res.json({
+            "code": 400,
+            "failed": "Database connection error"
+        })
+    }
+}
+
+const updateUserStatus = (status,res) => {
+    if(connection.connect){
+        console.log(status)
+        let queryString = 'UPDATE User SET account_status= ?'
+        let params = [status]
+        connection.query(queryString,params,(err,rows,feilds) => {
+            if(err){
+                res.json({
+                    "code":400,
+                    "failed":"User status update failed"
+                })
+            }else{
+                res.json({
+                    "code":200,
+                    "succes":"Request sent to Admin. Await for approval"
+                })
+            }
+        })
+    }else{
+        res.json({
+            "code": 400,
+            "failed": "Database connection error"
+        })
+    }
+}
 
 
 
 
 
-module.exports = { createUser, findUserByEmail,updateUserInfo,deleteUser};
+
+
+module.exports = { createUser, findUserByEmail,updateUserInfo,deleteUser,requestToDonate,updateUserStatus};
