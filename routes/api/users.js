@@ -100,7 +100,7 @@ router.post('/donate',authenticate.authenticateToken,(req,res,next)=>{
 })
 
 router.post('/requestdonor',authenticate.authenticateToken,(req,res)=>{
-	
+	User.makeRequest(req,res)
 })
 
 

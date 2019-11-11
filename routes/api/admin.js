@@ -28,6 +28,14 @@ router.post('/donors',(req,res)=>{
     Admin.getAllDonors(res)
 })
 
+router.post('/matches',(req,res)=>{
+    Admin.getAllMatched(req,res)
+})
+
+router.post('/confirm',(req,res)=>{
+    Admin.confirmCompletion(req,res,Admin.saveToMedicalHistory)
+})
+
 
 
 

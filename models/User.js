@@ -159,10 +159,28 @@ const updateUserStatus = (status,res) => {
     }
 }
 
+const makeRequest = (req,res) => {
+    let queryString = 'INSERT INTO DonorRecepient values (?,?,?,?)'
+    params = [UUID(),req.body.donor,req.user.id,1]
+    connection.query(queryString,params,(err,rows,feilds) => {
+        if(err){
+            res.json({
+                "code":400,
+                "failed":"User status update failed"
+            })
+        }else{
+            res.json({
+                "code":200,
+                "succes":"Request sent to donor. Await for acceptance"
+            })
+        }
+    })
+}
 
 
 
 
 
 
-module.exports = { createUser, findUserByEmail,updateUserInfo,deleteUser,requestToDonate,updateUserStatus};
+
+module.exports = { createUser, findUserByEmail,updateUserInfo,deleteUser,requestToDonate,updateUserStatus,makeRequest};
