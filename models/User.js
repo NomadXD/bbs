@@ -1,5 +1,6 @@
 const connection = require('./db')
 const UUID = require('uuid/v4');
+const jwt = require('jsonwebtoken')
 
 
 const createUser = (req, res) => {
@@ -15,9 +16,21 @@ const createUser = (req, res) => {
                     "failed": err
                 })
             } else {
+                const token = jwt.sign(req.body,process.env.JWT_SECRET)
+                let user = {
+                    "first_name":data.first_name,
+                    "last_name":data.last_name,
+                    "email":data.email,
+                    "birthday":data.birthday,
+                    "gender":data.gender,
+                    "blood_group":data.blood_group,
+                    "token":token
+
+                }
                 res.json({
                     "code": 200,
-                    "success": "Welcome to BBS"
+                    "success": "Welcome to BBS",
+                    "user":user
                 })
             }
         })
