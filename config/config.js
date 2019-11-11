@@ -1,11 +1,4 @@
-/**
- *
- * Author:  AppSeed.us
- *
- * License: MIT - Copyright (c) AppSeed.us
- * @link https://github.com/app-generator/nodejs-starter
- *
- */
+
 
 module.exports = {
 	development: {

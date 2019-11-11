@@ -1,12 +1,3 @@
-/**
- *
- * Author:  AppSeed.us
- *
- * License: MIT - Copyright (c) AppSeed.us
- * @link https://github.com/app-generator/nodejs-starter
- *
- */
-
 const Joi         = require('joi');
 const router      = require('express').Router();
 const bcrypt = require('bcrypt');
@@ -26,11 +17,16 @@ const userSchema = Joi.object().keys({
 	blood_group:Joi.required()
 });
 
+const loginSchema = Joi.object().keys({
+	password: Joi.string().required(),
+	email: Joi.string().email({ minDomainAtoms: 2 }).required()
+})
+
 /* POST login route */
 router.post('/login', (req, res, next) => {
 	const { body: { user } } = req;
 	console.log(req.body);
-	const result = Joi.validate(req.body, userSchema);
+	const result = Joi.validate(req.body, loginSchema);
     
 	if(result.error){
 		return res.status(422).json({
@@ -55,7 +51,7 @@ router.post('/signup', async (req, res /*, next*/) => {
 	}
 
 	req.body.password = await bcrypt.hash(req.body.password, 10)
-  User.createUser(req,res);
+  	User.createUser(req,res);
 });
 
 
@@ -88,7 +84,7 @@ router.delete('/delete',authenticate.authenticateToken,(req,res,next)=>{
 })
 
 router.put('/update',authenticate.authenticateToken,(req,res,next)=>{
-	User.updateUserInfo(req,res)
+	Common.updateUserInfo(req,res)
 		
 	
 })
@@ -101,6 +97,10 @@ router.post('/donate',authenticate.authenticateToken,(req,res,next)=>{
 
 router.post('/requestdonor',authenticate.authenticateToken,(req,res)=>{
 	User.makeRequest(req,res)
+})
+
+router.post('/requests',authenticate.authenticateToken,(req,res)=>{
+	User.getAllRequests(req,res)
 })
 
 

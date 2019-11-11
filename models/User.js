@@ -171,7 +171,25 @@ const makeRequest = (req,res) => {
         }else{
             res.json({
                 "code":200,
-                "succes":"Request sent to donor. Await for acceptance"
+                "success":"Request sent to donor. Await for acceptance"
+            })
+        }
+    })
+}
+
+const getAllRequests = (req,res) => {
+    let queryString = 'SELECT User.id,User.first_name,User.last_name,User.email,User.gender,User.blood_group FROM User,DonorRecepient where DonorRecepient.recepient_id = ?'
+    params = [req.user.id]
+    connection.query(queryString,params,(err,rows,feilds)=>{
+        if(err){
+            res.json({
+                "code":200,
+                "failed":err
+            })
+        }else{
+            res.json({
+                "code":200,
+                "requests": JSON.parse(JSON.stringify(rows))
             })
         }
     })
@@ -183,4 +201,4 @@ const makeRequest = (req,res) => {
 
 
 
-module.exports = { createUser, findUserByEmail,updateUserInfo,deleteUser,requestToDonate,updateUserStatus,makeRequest};
+module.exports = { createUser, findUserByEmail,updateUserInfo,deleteUser,requestToDonate,updateUserStatus,makeRequest,getAllRequests};
