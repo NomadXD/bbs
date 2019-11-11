@@ -12,6 +12,7 @@ const router      = require('express').Router();
 const bcrypt = require('bcrypt');
 const authenticate = require('../../utils/authentication')
 const User = require('../../models/User')
+const Common = require('../../models/Common')
 
 const userSchema = Joi.object().keys({
 	id: Joi.string().alphanum().min(3).max(30).optional(),
@@ -77,8 +78,8 @@ router.post('/testdb',async (req,res)=>{
 })
 
 
-router.get('/search',authenticate.authenticateToken,(req,res,next)=>{
-	//Query the db according to a specified feild and return a list of donor
+router.post('/search',authenticate.authenticateToken,(req,res,next)=>{
+	Common.searchDonors(req,res)
 })
 
 
@@ -96,6 +97,10 @@ router.put('/update',authenticate.authenticateToken,(req,res,next)=>{
 router.post('/donate',authenticate.authenticateToken,(req,res,next)=>{
 	User.requestToDonate(req,res)
 
+})
+
+router.post('/requestdonor',authenticate.authenticateToken,(req,res)=>{
+	
 })
 
 
