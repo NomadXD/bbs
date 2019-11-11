@@ -21,7 +21,7 @@ const createUser = (req, res) => {
                     "first_name":data.first_name,
                     "last_name":data.last_name,
                     "email":data.email,
-                    "birthday":data.birthday,
+                    "birthday":data.birthday.split("T")[0],
                     "gender":data.gender,
                     "blood_group":data.blood_group,
                     "token":token

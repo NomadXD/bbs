@@ -45,7 +45,7 @@ const authenticateAccount = async (account,password,res) => {
               "gender":account.gender,
               "blood_group":account.blood_group,
               "email":account.email,
-              "birthday":account.birthday,
+              "birthday":account.birthday.split("T")[0],
               "is_donor":account.is_donor,
               "token":accesToken
             }
