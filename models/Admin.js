@@ -40,7 +40,7 @@ const deleteRequest = (user,res) => {
         } else {
             res.json({
                 "code": 200,
-                "success": "Donation Request Accepted"
+                "success": "Query succesful"
             })
         }
     })
@@ -75,5 +75,59 @@ const getAllUserRequests = (res) => {
     
 }
 
+const getAllUsers = (res) => {
+    if (connection.connect) {
+        let queryString = 'SELECT id,first_name,last_name,email,gender FROM User where User.is_donor=false'
+        connection.query(queryString,(err, rows, feilds) => {
+            if (err) {
+                res.json({
+                    "code": 400,
+                    "failed": err
+                })
+            } else {
+                res.json({
+                    "code": 200,
+                    "success": "Query succesful",
+                    "Users": JSON.parse(JSON.stringify(rows))
+                })
 
-module.exports = {acceptUserRequest,deleteRequest,getAllUserRequests}
+            }
+        })
+    } else {
+        res.json({
+            "code": 400,
+            "failed": "Database connection error"
+        })
+    }
+
+}
+
+const getAllDonors = (res) => {
+    if (connection.connect) {
+        let queryString = 'SELECT id,first_name,last_name,email,gender FROM User where User.is_donor=true'
+        connection.query(queryString,(err, rows, feilds) => {
+            if (err) {
+                res.json({
+                    "code": 400,
+                    "failed": err
+                })
+            } else {
+                res.json({
+                    "code": 200,
+                    "success": "Query succesful",
+                    "Users": JSON.parse(JSON.stringify(rows))
+                })
+
+            }
+        })
+    } else {
+        res.json({
+            "code": 400,
+            "failed": "Database connection error"
+        })
+    }
+
+}
+
+
+module.exports = {acceptUserRequest,deleteRequest,getAllUserRequests,getAllUsers,getAllDonors}
