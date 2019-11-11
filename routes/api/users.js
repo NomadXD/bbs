@@ -41,7 +41,7 @@ router.post('/login', (req, res, next) => {
 
 
 router.post('/signup', async (req, res /*, next*/) => {
-
+	console.log(req.body)
 	let details = req.body;
 	const result = Joi.validate(req.body, userSchema);
 	if(result.error){
