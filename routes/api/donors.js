@@ -31,11 +31,8 @@ router.put('/update',authenticate.authenticateToken,(req,res)=>{
 })
 
 router.post('/cancel',authenticate.authenticateToken,(req,res)=>{
-	
+
 })
-
-
-
 
 
 module.exports = router;

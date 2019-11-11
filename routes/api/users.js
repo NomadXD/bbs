@@ -103,5 +103,9 @@ router.post('/requests',authenticate.authenticateToken,(req,res)=>{
 	User.getAllRequests(req,res)
 })
 
+router.post('/history',authenticate.authenticateToken,(req,res)=>{
+	Common.getDonationHistory(req,res)
+})
+
 
 module.exports = router;

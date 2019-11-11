@@ -1,5 +1,6 @@
 
 const connection = require('./db')
+const jwt = require('jsonwebtoken')
 
 
 const searchDonors = (req,res) => {
@@ -186,9 +187,20 @@ const updateUserInfo = (req,res) => {
                     "failed": err
                 })
             } else {
+                const accessToken = jwt.sign(req.body,process.env.JWT_SECRET)
                 res.json({
                     "code": 200,
-                    "success": "Details changed"
+                    "success": "Details changed",
+                    "user":{
+                        "id":req.user.id,
+                        "first_name":newInfo.first_name,
+                        "last_name":newInfo.last_name,
+                        "gender":newInfo.gender,
+                        "blood_group":newInfo.blood_group,
+                        "email":newInfo.email,
+                        "birthday":newInfo.birthday.split("T")[0],
+                        "token":accessToken
+                      }
                 })
             }
         })
@@ -201,9 +213,25 @@ const updateUserInfo = (req,res) => {
     
 }
 
-const getMedicalHistory = (req,res) => {
+const getDonationHistory = (req,res) => {
+    let queryString = 'SELECT DonationHistory.donation_id,User.first_name,User.last_name,User.email,DonationHistory.donated_date FROM DonationHistory,User where DonationHistory.recepient_id=User.id'
+    params = [req.user.id]
+    connection.query(queryString,params,(err,rows,feilds)=>{
+        if(err){
+            res.json({
+                "code":200,
+                "failed":err
+            })
+        }else{
+            res.json({
+                "code":200,
+                "requests": JSON.parse(JSON.stringify(rows))
+            })
+        }
+    })
+
     
 }
 
 
-module.exports = {searchDonors,updateUserInfo}
+module.exports = {searchDonors,updateUserInfo,getDonationHistory}
