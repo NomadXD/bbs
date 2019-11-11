@@ -191,7 +191,7 @@ const makeRequest = (req,res) => {
 }
 
 const getAllRequests = (req,res) => {
-    let queryString = 'SELECT User.id,User.first_name,User.last_name,User.email,User.gender,User.blood_group FROM User,DonorRecepient where DonorRecepient.recepient_id = ?'
+    let queryString = 'SELECT User.id,User.first_name,User.last_name,User.email,User.gender,User.blood_group,DonorRecepient.match_status FROM User,DonorRecepient where DonorRecepient.recepient_id = ? AND DonorRecepient.donor_id=User.id AND User.is_donor=true'
     params = [req.user.id]
     connection.query(queryString,params,(err,rows,feilds)=>{
         if(err){

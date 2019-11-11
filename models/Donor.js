@@ -57,5 +57,30 @@ const acceptRequest = (req,res) => {
 
 }
 
+const cancelRequest = (req,res) => {
+    if (connection.connect) {
+        let queryString = 'DELETE FROM DonorRecepient WHERE recepient_id= ?'
+        let params = [user.id]
+        connection.query(queryString, params, (err, rows, feilds) => {
+            if (err) {
+                res.json({
+                    "code": 400,
+                    "failed": err
+                })
+            } else {
+                res.json({
+                    "code": 200,
+                    "success": "Request cancelled"
+                })
+            }
+        })
+    } else {
+        res.json({
+            "code": 400,
+            "failed": "Database connection error"
+        })
+    }
+}
+
 
 module.exports = {getAllRequests,acceptRequest}

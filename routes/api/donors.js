@@ -3,6 +3,7 @@ const router      = require('express').Router();
 const bcrypt = require('bcrypt');
 const authenticate = require('../../utils/authentication')
 const Donor = require('../../models/Donor')
+const Common = require('../../models/Common')
 
 const donorSchema = Joi.object().keys({
 	id: Joi.string().alphanum().min(3).max(30).optional(),
@@ -25,6 +26,13 @@ router.post('/accept',authenticate.authenticateToken,(req,res)=>{
 	Donor.acceptRequest(req,res)
 })
 
+router.put('/update',authenticate.authenticateToken,(req,res)=>{
+	Common.updateUserInfo(req,res)
+})
+
+router.post('/cancel',authenticate.authenticateToken,(req,res)=>{
+	
+})
 
 
 
