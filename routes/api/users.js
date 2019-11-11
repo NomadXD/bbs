@@ -21,7 +21,7 @@ const userSchema = Joi.object().keys({
 	last_name: Joi.string().alphanum().min(2).max(100).required(),
 	birthday: Joi.date().iso().required(),
 	gender: Joi.string().max(1).required(),
-	account_status: Joi.optional(),
+	is_donor: Joi.optional(),
 	blood_group:Joi.required()
 });
 
@@ -67,12 +67,6 @@ router.get('/list', authenticate.authenticateToken, (req, res, next) => {
 		"password":req.user.password
 	})
 
-	// User.findAll().then(users => {
-
-	// 	return res.status(200).json(
-	// 		JSON.stringify( users )
-	// 	);
-	// })
 
 });
 
@@ -100,7 +94,7 @@ router.put('/update',authenticate.authenticateToken,(req,res,next)=>{
 
 
 router.post('/donate',authenticate.authenticateToken,(req,res,next)=>{
-	User.requestToDonate(req,res,User.updateUserStatus)
+	User.requestToDonate(req,res)
 
 })
 

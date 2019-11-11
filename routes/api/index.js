@@ -12,5 +12,6 @@ const router = express.Router();
 
 router.use('/users', require('./users'));
 router.use('/donors',require('./donors'));
+router.use('/admin',require('./admin'));
 
 module.exports = router;

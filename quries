@@ -1,0 +1,87 @@
+create table User(
+id char(36) not null unique,
+first_name varchar(255) not null,
+last_name varchar(255) not null,
+email varchar(64) primary key,
+birthday datetime not null,
+password varchar(60) not null,
+gender char(1) not null,
+is_donor boolean not null,
+blood_group int not null,
+createdAt timestamp default current_timestamp,
+updatedAt timestamp default current_timestamp on update current_timestamp);
+create table BloodGroup(
+blood_group_id int primary key,
+blood_type char(4) not null,
+gives varchar(32) not null,
+receives varchar(32) not null);
+alter table User add foreign key (blood_group) references BloodGroup(blood_group_id);
+create table DonationHistory(
+donation_id char(36) primary key,
+donor_id char(36) not null,
+recepient_id char(36) not null,
+donated_date datetime not null,
+donation_report_id char(36),
+foreign key (donor_id) references User(id),
+foreign key (recepient_id) references User(id));
+create table DonationReport(
+donation_report_id char(36) primary key,
+report text);
+alter table DonationHistory add foreign key (donor_id) references User(id);
+alter table DonationHistory add foreign key (recepient_id) references User(id);
+alter table DonationHistory add foreign key (donation_report_id) references DonationReport(donation_report_id);
+create table DonationRequest(
+donation_request_id char(36) primary key,
+requester_id char(36) not null,
+foreign key (requester_id) references User(id));
+create table DonorRecepient(
+match_id char(36) primary key,
+donor_id char(36) not null,
+recepient_id char(36) not null,
+match_status int not null,
+foreign key (donor_id) references User(id) on update cascade on delete cascade,
+foreign key (recepient_id) references User(id) on update cascade on delete cascade);
+
+
+
+alter table Donor add foreign key (blood_group) references BloodGroup(blood_group_id);
+create table Donor(
+id char(36) not null unique,
+first_name varchar(255) not null,
+last_name varchar(255) not null,
+email varchar(64) not null,
+birthday datetime not null,
+password varchar(60) not null,
+gender char(1) not null,
+account_status char(1) not null,
+blood_group int not null,
+createdAt timestamp default current_timestamp,
+updatedAt timestamp default current_timestamp on update current_timestamp);
+
+
+alter table DonationHistory add foreign key (donor_id) references Donor(id);
+
+
+insert into BloodGroup values(1,"O-","1,2,3,4,5,6,7,8","1");
+insert into BloodGroup values(2,"O+","8,4,6,2","1,2");
+insert into BloodGroup values(3,"A-","7,8,4,3","1,3");
+insert into BloodGroup values(4,"A+","8,4","1,2,3,4");
+insert into BloodGroup values(5,"B-","5,6,7,8","1,5");
+insert into BloodGroup values(6,"B+","6,8","1,2,5,6");
+insert into BloodGroup values(7,"AB-","7,8","1,3,5,7");
+insert into BloodGroup values(8,"AB+","8","1,2,3,4,5,6,7,8");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

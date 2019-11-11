@@ -15,16 +15,7 @@ const donorSchema = Joi.object().keys({
 	bloodGroupID:Joi.required()
 });
 
-router.post('/login',(req,res,next)=>{
-    const result = Joi.validate(req.body,donorSchema)
 
-    if(result.error){
-		return res.status(422).json({
-			errors: result.error
-		});
-    }
-    authenticate.authenticateDonor(req.body.email,req.body.password,res)
-})
 
 
 
