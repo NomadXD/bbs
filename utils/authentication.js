@@ -37,7 +37,18 @@ const authenticateAccount = async (account,password,res) => {
     console.log("Inside compare") 
     const accesToken = jwt.sign(account,process.env.JWT_SECRET);
         return res.json({
-            token:accesToken
+            "code":200,
+            "user":{
+              "id":account.id,
+              "first_name":account.first_name,
+              "last_name":account.last_name,
+              "gender":account.gender,
+              "blood_group":account.blood_group,
+              "email":account.email,
+              "birthday":account.birthday,
+              "is_donor":account.is_donor,
+              "token":accesToken
+            }
         })
       } else {
         return res.json({ message: 'Password incorrect' })
